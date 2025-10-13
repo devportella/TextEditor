@@ -21,10 +21,50 @@ static void Menu()
 
 static void Open()
 {
-    
+    Console.Clear();
+    Console.WriteLine("What's the file's path?");
+    string path = Console.ReadLine();
+
+    using (var file = new StreamReader(path))
+    {
+        string text = file.ReadToEnd();
+        Console.WriteLine(text);
+    }
+
+    Console.WriteLine("");
+    Console.ReadLine();
+    Menu();
 }
 
 static void Edit()
 {
+    Console.Clear();
+    Console.WriteLine("Write your text below (press ESC to exit)");
+    Console.WriteLine("--------------------");
+    string text = "";
 
+    do
+    {
+        text += Console.ReadLine();
+        text += Environment.NewLine;
+    }
+    while (Console.ReadKey().Key != ConsoleKey.Escape);
+
+    Save(text);
+}
+
+static void Save(string text)
+{
+    Console.Clear();
+    Console.WriteLine("What path to save the file?");
+    var path = Console.ReadLine();
+
+    using (var file = new StreamWriter(path))
+    {
+        file.Write(text);
+    }
+
+    Console.WriteLine($"File {path} saved successfuly");
+    Thread.Sleep(1500);
+    Menu();
 }
