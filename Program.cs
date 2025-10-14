@@ -8,7 +8,13 @@ static void Menu()
     Console.WriteLine("2 - Create new file");
     Console.WriteLine("0 - Exit\n");
     Console.Write("Your input: ");
-    short option = short.Parse(Console.ReadLine());
+
+    var raw = Console.ReadLine();
+    
+    short option;
+
+    if (!short.TryParse(raw, out option))
+        option = -1;
 
     switch (option)
     {
@@ -23,7 +29,7 @@ static void Open()
 {
     Console.Clear();
     Console.WriteLine("What's the file's path?");
-    string path = Console.ReadLine();
+    var path = Console.ReadLine() ?? string.Empty;
 
     using (var file = new StreamReader(path))
     {
@@ -57,14 +63,22 @@ static void Save(string text)
 {
     Console.Clear();
     Console.WriteLine("What path to save the file?");
-    var path = Console.ReadLine();
+    var path = Console.ReadLine() ?? string.Empty;
+
+    if (string.IsNullOrWhiteSpace(path))
+    {
+        Console.WriteLine("Invalid path. Press Enter to return...");
+        Console.ReadLine();
+        Menu();
+        return;
+    }
 
     using (var file = new StreamWriter(path))
     {
         file.Write(text);
     }
 
-    Console.WriteLine($"File {path} saved successfuly");
+    Console.WriteLine($"\nFile \"{path}\" saved successfuly");
     Thread.Sleep(1500);
     Menu();
 }
