@@ -28,17 +28,18 @@ static void Menu()
 static void Open()
 {
     Console.Clear();
-    Console.WriteLine("What's the file's path?");
+    Console.Write("Enter the file's path: ");
     var path = Console.ReadLine() ?? string.Empty;
 
     using (var file = new StreamReader(path))
     {
         string text = file.ReadToEnd();
+        Console.WriteLine($"\n--- {path} ---\n");
         Console.WriteLine(text);
     }
 
-    Console.WriteLine("");
-    Console.ReadLine();
+    Console.Write("\nPress any key to return to menu...");
+    Console.ReadKey(intercept: true);
     Menu();
 }
 
