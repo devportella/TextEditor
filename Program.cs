@@ -46,24 +46,35 @@ static void Open()
 static void Edit()
 {
     Console.Clear();
-    Console.WriteLine("Write your text below (press ESC to exit)");
-    Console.WriteLine("--------------------");
-    string text = "";
+    Console.WriteLine("--- Write your text below (press ESC to save) ---\n");
 
-    do
+    var sb = new System.Text.StringBuilder();
+
+    while (true)
     {
-        text += Console.ReadLine();
-        text += Environment.NewLine;
-    }
-    while (Console.ReadKey().Key != ConsoleKey.Escape);
+        var key = Console.ReadKey(intercept: true);
 
-    Save(text);
+        if (key.Key == ConsoleKey.Escape) break;
+
+        if (key.Key == ConsoleKey.Enter)
+        {
+            sb.Append(Environment.NewLine);
+            Console.WriteLine();
+        }
+        else
+        {
+            sb.Append(key.KeyChar);
+            Console.Write(key.KeyChar);
+        }
+    }
+
+    Save(sb.ToString());
 }
 
 static void Save(string text)
 {
     Console.Clear();
-    Console.WriteLine("What path to save the file?");
+    Console.Write("Enter path to save the file: ");
     var path = Console.ReadLine() ?? string.Empty;
 
     if (string.IsNullOrWhiteSpace(path))
@@ -80,6 +91,6 @@ static void Save(string text)
     }
 
     Console.WriteLine($"\nFile \"{path}\" saved successfuly");
-    Thread.Sleep(1500);
+    Thread.Sleep(2000);
     Menu();
 }
